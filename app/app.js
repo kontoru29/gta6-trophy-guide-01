@@ -16,6 +16,10 @@ const KIND_LABELS = {
 };
 const GRADE_ORDER = { platinum: 0, gold: 1, silver: 2, bronze: 3 };
 const GRADE_LABEL = { platinum: 'Platinum', gold: 'Gold', silver: 'Silver', bronze: 'Bronze' };
+const PHASE_OF_KIND = { story: 1, side: 2, activity: 3, collectible: 4, exploration: 4, crime: 5, completion: 6, platinum: 6 };
+function phaseOf(t) {
+  return PHASE_OF_KIND[t.kind] ?? 6;
+}
 
 const data = await (await fetch('data/trophies.json')).json();
 const trophies = data.trophies;
@@ -213,6 +217,7 @@ function toggleEarned(t) {
   renderProgress();
   renderList();
   renderDetail();
+  renderPhaseCounts();
 }
 
 function selectTrophy(id) {
@@ -264,13 +269,11 @@ function renderDetail() {
   }
   detailBody.append(row);
 
-  if (t.missable) {
-    const banner = document.createElement('div');
-    banner.className = 'missable-banner';
-    banner.textContent =
-      'Missable: this is the one trophy the guides flag as potentially missable. Do Lucia’s balcony meditation before leaving Chapter 1, and keep a manual save at the start of every chapter.';
-    detailBody.append(banner);
-  }
+  const phaseTag = document.createElement('span');
+  phaseTag.className = 'tag';
+  const phaseTitle = data.phases && data.phases[phaseOf(t) - 1] ? data.phases[phaseOf(t) - 1].title : '';
+  phaseTag.textContent = 'Phase ' + phaseOf(t) + ' of 6 · ' + phaseTitle;
+  row.append(phaseTag);
 
   if (!isSpoiler(t)) {
     const guideHead = document.createElement('h3');
@@ -287,6 +290,14 @@ function renderDetail() {
     sources.className = 'sources';
     sources.textContent = t.sources;
     detailBody.append(sources);
+  }
+
+  if (t.missable) {
+    const banner = document.createElement('div');
+    banner.className = 'missable-banner';
+    banner.textContent =
+      'Missable: the one trophy the guides flag as potentially missable. Do Lucia’s balcony meditation before leaving Chapter 1, and keep a manual save at the start of every chapter.';
+    detailBody.append(banner);
   }
 
   const earnBtn = document.createElement('button');
@@ -328,10 +339,21 @@ function renderMissables() {
   }
 }
 
+const SOURCE_NOTES = [
+  'The official trophy names, descriptions, grades and tracked counts.',
+  'The official list as a second source; per-trophy sources name it where it backs a fact.',
+  'Achievement list and the 100% checklist details.',
+  'Full trophy list, missable flags and no-mission-replay notes.',
+  'Full trophy list and counts.',
+  'Platinum roadmap, phase order and time estimates.',
+  'Full trophy list with PowerPyx and GTABase methods.',
+  'November 2026 trophy list and counts.',
+];
+
 function renderSources() {
   const box = $('sourceList');
   box.replaceChildren();
-  for (const s of data.sources) {
+  for (const [index, s] of data.sources.entries()) {
     const item = document.createElement('li');
     if (s.url) {
       const link = document.createElement('a');
@@ -343,8 +365,43 @@ function renderSources() {
     } else {
       item.textContent = s.name;
     }
+    const note = document.createElement('p');
+    note.className = 'source-note';
+    note.textContent = SOURCE_NOTES[index] ?? '';
+    item.append(note);
     box.append(item);
   }
+}
+
+function phaseCounts() {
+  const counts = {};
+  for (const t of trophies) {
+    const n = phaseOf(t);
+    counts[n] = counts[n] ?? { total: 0, earned: 0 };
+    counts[n].total += 1;
+    if (earned.has(t.name)) counts[n].earned += 1;
+  }
+  return counts;
+}
+
+function renderPhaseCounts() {
+  const counts = phaseCounts();
+  document.querySelectorAll('[data-phase-count]').forEach((el) => {
+    const n = Number(el.dataset.phaseCount);
+    const c = counts[n];
+    if (c) el.textContent = c.earned + ' of ' + c.total + ' earned';
+  });
+  document.querySelectorAll('.phases > li').forEach((li, index) => {
+    const c = counts[index + 1];
+    if (!c) return;
+    let badge = li.querySelector('.phase-progress');
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'phase-progress';
+      li.querySelector('h3').append(badge);
+    }
+    badge.textContent = c.earned + '/' + c.total + ' earned';
+  });
 }
 
 function wireControls() {
@@ -430,3 +487,4 @@ renderList();
 renderDetail();
 renderMissables();
 renderSources();
+renderPhaseCounts();
