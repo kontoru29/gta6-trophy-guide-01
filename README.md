@@ -4,23 +4,23 @@
 
 # Leonida Trophy Guide
 
-Leonida Trophy Guide is an offline web guide and tracker for all 55 PlayStation 5 trophies of Grand Theft Auto VI: 1 platinum, 2 gold, 6 silver and 46 bronze. It lists every trophy with its official name, description and grade, and pairs each one with a guide written in our own words that names where its facts come from.
+A complete offline guide and tracker for the 55 PlayStation 5 trophies of Grand Theft Auto VI: 1 platinum, 2 gold, 6 silver and 46 bronze. Every trophy shows its official name, description and grade, next to a guide in our own words that names its sources, a six-phase road to the platinum, and a clear flag on the one trophy that can be missed.
 
 ## What it does
 
-* **Checklist:** tick trophies off as you earn them. Progress saves in your browser and survives a reload, with a progress bar and a breakdown by grade.
-* **Filters and search:** find a trophy by name or description, and filter by grade, by kind (story, missable, collectibles, activities) and by earned or not yet earned.
+* **Checklist:** tick trophies off as you earn them. Progress saves in your browser and survives a reload, with a progress bar, a breakdown by grade, and a per-phase count on the roadmap so you can see which part of the journey is done.
+* **Filters and search:** find a trophy by name or description, and filter by grade, by kind (story, side missions, activities, collectibles, crime, exploration, missable) and by earned or not yet earned.
 * **Spoiler setting:** story trophies stay hidden until you earn them, so the guide never spoils a chapter you have not played yet.
-* **Roadmap to the platinum:** the order to play in, built from the official descriptions: which story chapters and missions, which collectibles and counts, and what to finish before the point of no return.
-* **Missables:** every trophy that can be missed is flagged, with when it can be missed and what to do instead.
+* **Roadmap to the platinum:** six phases in playing order, from the story (50-80 hours) through side characters, activities, collectibles and crime to the 100% clean-up, with the hours and the trophy count of each phase.
+* **Missables:** the one trophy that can be missed is flagged everywhere it appears, with when it can be missed and what to do instead; the other 54 can all be earned after the story.
 * **Cited guides:** every trophy has a guide of its own that says where to go, what to do and when it can be missed, and cites its sources. No guide text is copied from another guide.
 * **Export and import:** back your progress up to a file and restore it on another machine.
 
 ## How to run it
 
-Open `app/index.html` in a desktop browser. That is all it needs: the guide is plain static files, and everything works with the network off.
+Double-click `app/index.html` in a desktop browser and the guide opens: plain static files, no build step, and everything keeps working with the network off.
 
-Or serve the folder and open it:
+To serve it instead:
 
 ```sh
 node serve.ts
@@ -28,7 +28,7 @@ node serve.ts
 
 Then open http://localhost:8080 in a desktop browser.
 
-To build the hand in bundle locally:
+To build the hand-in bundle locally:
 
 ```sh
 mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
@@ -36,11 +36,12 @@ mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
 
 ## What is inside
 
-* `app/index.html` and `app/style.css` — the guide page and its Vice City sunset look.
-* `app/app.js` — the tracker: checklist, filters, spoiler mode, roadmap helpers and progress saving.
-* `app/data/trophies.json` — the official list of all 55 trophies with their names, descriptions, grades and guides.
-* `main.ts` — hands the guide in: it copies `app/` and `screenshots/` to the output folder and writes `dossier.json`.
-* `screenshots/` — four screenshots of the guide: checklist, roadmap, missables and sources.
+* `app/index.html` — the guide page: hero with the platinum path at a glance, tabs for the checklist, the roadmap, the missables and the sources.
+* `app/style.css` — the Vice City sunset look: deep purple panels, pink and orange accents, grade colours for each trophy.
+* `app/app.js` — the tracker: checklist, filters, spoiler mode, roadmap phase counts, progress saving, export and import.
+* `app/data/trophies.json` — the official 55 trophies with names, descriptions, grades and guides, plus the six roadmap phases they belong to.
+* `main.ts` — the hand-in: copies `app/` and `screenshots/` to the output folder and writes `dossier.json`.
+* `screenshots/` — four captures of the guide: checklist with a guide open, roadmap, missables and sources.
 
 ## Bounty
 

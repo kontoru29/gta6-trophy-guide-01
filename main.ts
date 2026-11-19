@@ -1,16 +1,16 @@
-// Leonida Trophy Guide — entrypoint (Node 22, standard library only).
+// Leonida Trophy Guide — the hand-in program (Node 22, standard library only).
 //
-// What this program does, in plain terms: it hands the guide in. The guide itself is
-// the static files in app/ (index.html, its script and stylesheet, and the trophy data),
-// plus the screenshots/ captures of the running app. This file copies both folders
-// into the grader's output directory and writes dossier.json there, the summary the
-// judge reads: the screenshots, the first load's files and bytes, and the app's source.
-// The summary is produced by the vendored make.fun library, vendor/makefun-frontend.ts,
-// which the scorer requires to be the one that wrote it — leave that file untouched.
+// This file takes the finished guide and packs it for the grader. The guide
+// itself lives in app/: the page, its script and stylesheet, and the trophy
+// data. The screenshots/ folder holds four captures of the running app. This
+// program copies both folders into the output directory and writes
+// dossier.json there, the summary the judge reads, built by the vendored
+// make.fun library in vendor/makefun-frontend.ts. That vendored file must
+// stay exactly as the kit shipped it.
 //
-// Run it locally like this:
+// Try it locally with:
 //   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
-// Inside the grader, MAKEFUN_OUTPUT_DIR is unset and /output is used instead.
+// The grader sets no MAKEFUN_OUTPUT_DIR, so /output is used there.
 
 import { cpSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -32,6 +32,10 @@ function handIn(folderName) {
 mkdirSync(outputDir, { recursive: true });
 if (!existsSync(join(repoRoot, 'app', 'index.html'))) {
   throw new Error('app/index.html is missing: nothing to hand in');
+}
+const shotsDir = join(repoRoot, 'screenshots');
+if (!existsSync(shotsDir)) {
+  throw new Error('screenshots/ is missing: the guide hands in 3 or 4 captures');
 }
 handIn('app');
 handIn('screenshots');
