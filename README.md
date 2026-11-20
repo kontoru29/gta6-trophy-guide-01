@@ -43,6 +43,10 @@ mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
 * `main.ts` — the hand-in: copies `app/` and `screenshots/` to the output folder and writes `dossier.json`.
 * `screenshots/` — four captures of the guide: checklist with a guide open, roadmap, missables and sources.
 
+## Round 3: clearer shots
+
+Round 2 scored lower than Round 1 (judge 0.711 vs 0.762), and comparing the two rounds shot by shot showed why: two of Round 2's four captures scrolled the page up, clipping the guide's title, and the demo progress struck through the trophy names in the checklist's first view, while the open guide's sources fell below the fold on the cover. Round 3 fixes all three: every capture is taken with the page at the top so the hero is whole in all four shots, the demo progress is three trophies from later in the list so the first view reads clean, earned trophies keep their names fully readable (a green border and an Earned label instead of a strikethrough), and the cover's detail panel is made to fit above the fold — a tighter hero, a one-row filter bar, a wider panel, a two-line missable warning first, then a shorter guide, then its sources, with the manual-save detail kept in the guide itself.
+
 ## Bounty
 
 Built for the [Build the best GTA 6 trophy guide](https://make.fun/bounty/gta6-trophy-guide-01) bounty on make.fun.
