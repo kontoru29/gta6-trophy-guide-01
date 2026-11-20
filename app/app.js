@@ -217,6 +217,7 @@ function toggleEarned(t) {
   renderProgress();
   renderList();
   renderDetail();
+  renderMissables();
   renderPhaseCounts();
 }
 
@@ -275,6 +276,14 @@ function renderDetail() {
   phaseTag.textContent = 'Phase ' + phaseOf(t) + ' of 6 · ' + phaseTitle;
   row.append(phaseTag);
 
+  if (t.missable) {
+    const banner = document.createElement('div');
+    banner.className = 'missable-banner';
+    banner.textContent =
+      'Missable: the one trophy that can disappear. Do Lucia’s balcony meditation in Chapter 1, and keep a manual save.';
+    detailBody.append(banner);
+  }
+
   if (!isSpoiler(t)) {
     const guideHead = document.createElement('h3');
     guideHead.textContent = 'How to get it';
@@ -290,14 +299,6 @@ function renderDetail() {
     sources.className = 'sources';
     sources.textContent = t.sources;
     detailBody.append(sources);
-  }
-
-  if (t.missable) {
-    const banner = document.createElement('div');
-    banner.className = 'missable-banner';
-    banner.textContent =
-      'Missable: the one trophy the guides flag as potentially missable. Do Lucia’s balcony meditation before leaving Chapter 1, and keep a manual save at the start of every chapter.';
-    detailBody.append(banner);
   }
 
   const earnBtn = document.createElement('button');
